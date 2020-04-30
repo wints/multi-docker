@@ -1,0 +1,18 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t mwints/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run mwints/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t mwints/multi-client ./client
+  - docker build -t mwints/multi-nginx ./nginx
+  - docker build -t mwints/multi-server ./server
+  - docker build -t mwints/multi-worker ./worker
+  # Log in to the docker CLI
+  
+  # Take those images and push them to docker hub
